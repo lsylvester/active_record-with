@@ -2,6 +2,7 @@ require "minitest/autorun"
 
 require 'active_record'
 require 'pry'
+require 'active_record/with'
 ActiveRecord::Base.establish_connection(:adapter => 'postgresql', :host => "localhost", :port => ENV["BOXEN_POSTGRESQL_PORT"], :database => "with_test")
 ActiveRecord::Base.connection.create_table(:monkeys, :force => true) do |t|
     t.string :name
@@ -18,6 +19,6 @@ class TestMeme < MiniTest::Unit::TestCase
   end
 
   def test_that_can_query_with_with
-    Monkey.with(some_monkeys: Monkey.order(:age)).from(:some_monkeys).to_a.should == [@bobo, @kiki]
+    assert_equal [@bobo, @kiki], Monkey.with(some_monkeys: Monkey.order(:age)).to_a
   end
 end
