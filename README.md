@@ -20,7 +20,7 @@ Or install it yourself as:
 
     Order.
       with(regional_sales: Order.select('region', 'sum(amount) as total_sales').group('region')).
-      with(top_regions: Order.from('regional_sales').where("total_sales > (SELECT SUM(total_sales)/10 FROM regional_sales)")).
+      with(top_regions: Order.select("region").from('regional_sales').where("total_sales > (SELECT SUM(total_sales)/10 FROM regional_sales)")).
       select("region", "product", "SUM(quantity) AS product_units", "SUM(amount) AS proudct_sales").
       where("region in (SELECT region from top_regions)").
       group("region, product")
