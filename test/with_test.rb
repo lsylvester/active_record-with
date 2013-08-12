@@ -14,11 +14,13 @@ end
 
 class TestMeme < MiniTest::Unit::TestCase
   def setup
+    ActiveRecord::Base.logger = Logger.new(STDOUT)
     @bobo = Monkey.create(:name => "Bobo", :age => 13)
     @kiki = Monkey.create(:name => "Kiki", :age => 15)
   end
 
   def test_that_can_query_with_with
-    assert_equal [@bobo, @kiki], Monkey.with(some_monkeys: Monkey.order(:age)).to_a
+    assert_equal [@bobo, @kiki], Monkey.with(some_monkeys: Monkey.order(:age)).select("some_monkeys.*").from('some_monkeys').to_a
+    assert_equal [@kiki, @bobo], Monkey.with(some_monkeys: Monkey.order(:age => :desc)).select("some_monkeys.*").from('some_monkeys').to_a
   end
 end

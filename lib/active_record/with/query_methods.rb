@@ -9,6 +9,19 @@ module ActiveRecord
       def with(with_values)
         spawn.with!(with_values)
       end
+      
+      def build_arel
+        arel = super
+        build_with(arel)
+        arel
+      end
+      
+      def build_with(arel)
+        return arel unless @values[:with]
+        @values[:with].inject(arel) do |arel, (name, relation)|
+          arel.with(Arel::SqlLiteral.new("#{name} as (#{relation.to_sql})")).to_sql
+        end
+      end
     end
   end
   module With
