@@ -44,6 +44,10 @@ should product SQL like
     WHERE region IN (SELECT region FROM top_regions)
     GROUP BY region, product;
 
+## TODO
+
+Add support for recusion.
+
 ## Contributing
 
 1. Fork it
