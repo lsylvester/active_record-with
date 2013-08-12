@@ -19,7 +19,7 @@ module ActiveRecord
       def build_with(arel)
         return arel unless @values[:with]
         @values[:with].inject(arel) do |arel, (name, relation)|
-          arel.with(Arel::SqlLiteral.new("#{name} as (#{relation.to_sql})"))
+          arel.with(Arel::Nodes::As.new(Arel::Table.new(name), Arel::SqlLiteral.new("(#{relation.to_sql})")))
         end
       end
     end
